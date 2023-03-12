@@ -1,5 +1,7 @@
 # ETS PPLBO 2023
 
-NAMA&emsp;: LUTHFI MAAJID \
-NIM&emsp;&emsp;: 201524050 \
-KELAS&nbsp;&ensp;: 3B
+
+| NAMA  | LUTHFI MAAJID |
+|-------|---------------|
+| NIM   | 201524050     |
+| KELAS | 3B            |
