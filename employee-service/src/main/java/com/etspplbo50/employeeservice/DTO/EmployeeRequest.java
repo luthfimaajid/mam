@@ -1,0 +1,16 @@
+package com.etspplbo50.employeeservice.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+public class EmployeeRequest {
+    private String cafeId;
+    private String name;
+    private Boolean isAbleDelivery;
+}
