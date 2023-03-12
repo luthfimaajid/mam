@@ -19,6 +19,7 @@ public class OrderLineItems {
     @Id
     private String id;
     private String menuId;
+    private Integer price;
     private Integer quantity;
 
 }
