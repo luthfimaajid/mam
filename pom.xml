@@ -25,6 +25,8 @@
         <module>order-service</module>
         <module>customer-service</module>
         <module>payment-service</module>
+        <module>delivery-service</module>
+        <module>ticket-service</module>
     </modules>
 
     <properties>
