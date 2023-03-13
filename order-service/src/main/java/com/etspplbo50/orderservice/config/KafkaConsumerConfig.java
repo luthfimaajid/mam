@@ -1,6 +1,7 @@
 package com.etspplbo50.orderservice.config;
 
-import com.etspplbo50.orderservice.event.OrderReadyToDeliverEvent;
+import com.etspplbo50.orderservice.event.OrderDeliveredEvent;
+import com.etspplbo50.orderservice.event.OrderReadyEvent;
 import com.etspplbo50.orderservice.event.PaymentSettledEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -12,6 +13,7 @@ import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+import org.springframework.kafka.support.converter.StringJsonMessageConverter;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
@@ -27,9 +29,18 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         return props;
     }
 
+//    public Map<String, Object> consumerOrderDeliveredConfig() {
+//        Map<String, Object> props = new HashMap<>();
+//        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
+//        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+//        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+//        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+//        return props;
+//    }
     @Bean
     public ConsumerFactory<String, PaymentSettledEvent> paymentSettledEventConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfig());
@@ -45,16 +56,34 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, OrderReadyToDeliverEvent> orderReadyToDeliverEventConsumerFactory() {
+    public ConsumerFactory<String, OrderReadyEvent> orderReadyEventConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfig());
     }
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderReadyToDeliverEvent>>
-    orderReadyToDeliverListenerFactory(
-            ConsumerFactory<String, OrderReadyToDeliverEvent> orderReadyToDeliverEventConsumerFactory
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderReadyEvent>>
+    orderReadyListenerFactory(
+            ConsumerFactory<String, OrderReadyEvent> orderReadyEventConsumerFactory
     ) {
-        ConcurrentKafkaListenerContainerFactory<String, OrderReadyToDeliverEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(orderReadyToDeliverEventConsumerFactory);
+        ConcurrentKafkaListenerContainerFactory<String, OrderReadyEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(orderReadyEventConsumerFactory);
         return factory;
     }
+//    @Bean
+//    public StringJsonMessageConverter jsonMessageConverter() {
+//        return new StringJsonMessageConverter();
+//    }
+//
+//    @Bean
+//    public ConsumerFactory<String, String> orderDeliveredEventConsumerFactory() {
+//        return new DefaultKafkaConsumerFactory<>(consumerOrderDeliveredConfig());
+//    }
+//    @Bean
+//    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
+//    orderDeliveredListenerFactory(
+//            ConsumerFactory<String, String> orderDeliveredEventConsumerFactory
+//    ) {
+//        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+//        factory.setConsumerFactory(orderDeliveredEventConsumerFactory);
+//        return factory;
+//    }
 }

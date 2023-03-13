@@ -2,7 +2,7 @@ package com.etspplbo50.ticketservice.service;
 
 import com.etspplbo50.ticketservice.dto.TicketRequest;
 import com.etspplbo50.ticketservice.dto.TicketResponse;
-import com.etspplbo50.ticketservice.event.OrderReadyToDeliverEvent;
+import com.etspplbo50.ticketservice.event.OrderReadyEvent;
 import com.etspplbo50.ticketservice.model.Ticket;
 import com.etspplbo50.ticketservice.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class TicketService {
     private final TicketRepository ticketRepository;
 
-    private final KafkaTemplate<String, OrderReadyToDeliverEvent> orderReadyToDeliverEventKafkaTemplate;
+    private final KafkaTemplate<String, OrderReadyEvent> orderReadyEventKafkaTemplate;
 
     public void paymentSettledTopicHandler(String orderId) {
         Ticket ticket = Ticket.builder()
@@ -75,7 +75,7 @@ public class TicketService {
 
             ticketRepository.save(newTicket);
 
-            orderReadyToDeliverEventKafkaTemplate.send("orderReadyToDeliverTopic", new OrderReadyToDeliverEvent(newTicket.getOrderId()));
+            orderReadyEventKafkaTemplate.send("orderReadyTopic", new OrderReadyEvent(newTicket.getOrderId()));
 
             return mapTicketToKitchenResponse(newTicket);
         } else {

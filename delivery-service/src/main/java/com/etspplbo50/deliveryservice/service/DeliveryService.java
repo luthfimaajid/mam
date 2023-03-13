@@ -3,7 +3,6 @@ package com.etspplbo50.deliveryservice.service;
 import com.etspplbo50.deliveryservice.dto.DeliveryRequest;
 import com.etspplbo50.deliveryservice.dto.DeliveryResponse;
 import com.etspplbo50.deliveryservice.event.OrderDeliveredEvent;
-import com.etspplbo50.deliveryservice.event.OrderReadyToDeliverEvent;
 import com.etspplbo50.deliveryservice.event.OrderShippedEvent;
 import com.etspplbo50.deliveryservice.model.Delivery;
 import com.etspplbo50.deliveryservice.repository.DeliveryRepository;
@@ -26,20 +25,19 @@ public class DeliveryService {
     private final KafkaTemplate<String, OrderShippedEvent> orderShippedEventKafkaTemplate;
     private final KafkaTemplate<String, OrderDeliveredEvent> orderDeliveredEventKafkaTemplate;
 
-    public void orderReadyToDeliverTopicHandler(String orderId) {
-
+    public void orderReadyTopicHandler(String orderId) {
         Delivery delivery = Delivery.builder()
                 .orderId(orderId)
-                .status("PREPARING")
+                .status("SHIPPED")
+                .employeeId("640f4a33d17f4d5cb232fb2b")
                 .build();
 
         deliveryRepository.save(delivery);
 
-        log.info("Preparing order for {}", orderId);
+        orderShippedEventKafkaTemplate.send("orderShippedTopic", new OrderShippedEvent(orderId, delivery.getEmployeeId()));
+
+        log.info("Delivering order for {}", orderId);
     }
-
-
-
 
     public List<DeliveryResponse> getAllDelivery() {
         List<Delivery> deliveryList = deliveryRepository.findAll();
@@ -78,10 +76,19 @@ public class DeliveryService {
         if (delivery.isPresent()) {
             Delivery newDelivery = delivery.get();
 
-            newDelivery.setStatus("READY TO DELIVER");
+            newDelivery.setStatus("DELIVERED");
 
-            deliveryRepository.save(newDelivery);
+            newDelivery = deliveryRepository.save(newDelivery);
 
+            orderDeliveredEventKafkaTemplate.send(
+                    "orderDeliveredTopic",
+                    OrderDeliveredEvent.builder()
+                            .orderId(newDelivery.getOrderId())
+                            .employeeId(newDelivery.getEmployeeId())
+                            .startTime(newDelivery.getStartTime())
+                            .endTime(newDelivery.getEndTime())
+                    .build()
+            );
 
             return mapDeliveryToKitchenResponse(newDelivery);
         } else {

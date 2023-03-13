@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderReadyToDeliverEvent {
+public class OrderReadyEvent {
     private String orderId;
 }

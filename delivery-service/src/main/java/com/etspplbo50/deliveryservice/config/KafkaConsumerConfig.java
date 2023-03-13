@@ -1,6 +1,6 @@
 package com.etspplbo50.deliveryservice.config;
 
-import com.etspplbo50.deliveryservice.event.OrderReadyToDeliverEvent;
+import com.etspplbo50.deliveryservice.event.OrderReadyEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,16 +30,16 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, OrderReadyToDeliverEvent> orderReadyToDeliverEventConsumerFactory() {
+    public ConsumerFactory<String, OrderReadyEvent> orderReadyEventConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfig());
     }
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderReadyToDeliverEvent>>
-    orderReadyToDeliverListenerFactory(
-            ConsumerFactory<String, OrderReadyToDeliverEvent> orderReadyToDeliverEventConsumerFactory
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderReadyEvent>>
+    orderReadyListenerFactory(
+            ConsumerFactory<String, OrderReadyEvent> orderReadyEventConsumerFactory
     ) {
-        ConcurrentKafkaListenerContainerFactory<String, OrderReadyToDeliverEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(orderReadyToDeliverEventConsumerFactory);
+        ConcurrentKafkaListenerContainerFactory<String, OrderReadyEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(orderReadyEventConsumerFactory);
         return factory;
     }
 }

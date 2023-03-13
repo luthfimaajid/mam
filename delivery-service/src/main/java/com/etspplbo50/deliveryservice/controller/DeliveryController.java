@@ -2,11 +2,14 @@ package com.etspplbo50.deliveryservice.controller;
 
 import com.etspplbo50.deliveryservice.dto.DeliveryRequest;
 import com.etspplbo50.deliveryservice.dto.DeliveryResponse;
+import com.etspplbo50.deliveryservice.event.OrderReadyEvent;
 import com.etspplbo50.deliveryservice.service.DeliveryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.*;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -26,6 +29,15 @@ public class DeliveryController {
 //        String orderId = obj.getString("orderId");
 //        deliveryService.paymentSettledTopicHandler(orderId);
 //    }
+    @KafkaListener(
+            topics = "orderReadyTopic",
+            groupId = "deliveryId"
+    )
+    public void orderReadyTopicHandler(OrderReadyEvent orderReadyEvent) {
+        JSONObject obj = new JSONObject(orderReadyEvent.getOrderId());
+        String orderId = obj.getString("orderId");
+        deliveryService.orderReadyTopicHandler(orderId);
+    }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

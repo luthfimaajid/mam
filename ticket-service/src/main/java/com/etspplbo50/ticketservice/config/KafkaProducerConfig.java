@@ -1,6 +1,6 @@
 package com.etspplbo50.ticketservice.config;
 
-import com.etspplbo50.ticketservice.event.OrderReadyToDeliverEvent;
+import com.etspplbo50.ticketservice.event.OrderReadyEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,14 +28,14 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, OrderReadyToDeliverEvent> orderReadyToDeliverEventProducerFactory() {
+    public ProducerFactory<String, OrderReadyEvent> orderReadyEventProducerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
     @Bean
-    public KafkaTemplate<String, OrderReadyToDeliverEvent> orderReadyToDeliverEventKafkaTemplate(
-            ProducerFactory<String, OrderReadyToDeliverEvent> orderReadyToDeliverEventProducerFactory
+    public KafkaTemplate<String, OrderReadyEvent> orderReadyEventKafkaTemplate(
+            ProducerFactory<String, OrderReadyEvent> orderReadyEventProducerFactory
     ) {
-        return new KafkaTemplate<>(orderReadyToDeliverEventProducerFactory);
+        return new KafkaTemplate<>(orderReadyEventProducerFactory);
     }
 }

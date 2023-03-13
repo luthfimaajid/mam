@@ -149,6 +149,36 @@ public class OrderService {
         }
     }
 
+    public void orderShippedTopicHandler(String id) {
+        Optional<Order> order = orderRepository.findById(id);
+
+        if (order.isPresent()) {
+            Order newOrder = order.get();
+
+            newOrder.setStatus("DELIVERING");
+
+            log.info("Order {} is being shipped to the customer", id);
+            orderRepository.save(newOrder);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found");
+        }
+    }
+
+    public void orderDeliveredTopicHandler(String id) {
+        Optional<Order> order = orderRepository.findById(id);
+
+        if (order.isPresent()) {
+            Order newOrder = order.get();
+
+            newOrder.setStatus("COMPLETED");
+
+            log.info("Order is delivered to the customer, order {} is completed", id);
+            orderRepository.save(newOrder);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found");
+        }
+    }
+
 
 
     private OrderLineItems parseOrderLineItemsRequestToModel(OrderLineItemsRequest orderLineItemsRequest) {

@@ -19,8 +19,14 @@ public class KafkaTopicConfig {
                 .build();
     }
     @Bean
-    public NewTopic orderReadyToDeliverTopic() {
-        return TopicBuilder.name("orderReadyToDeliverTopic")
+    public NewTopic orderReadyTopic() {
+        return TopicBuilder.name("orderReadyTopic")
+                .build();
+    }
+
+    @Bean
+    public NewTopic orderDeliveredTopic() {
+        return TopicBuilder.name("orderDeliveredTopic")
                 .build();
     }
 }

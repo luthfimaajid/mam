@@ -8,8 +8,8 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopicConfig {
     @Bean
-    public NewTopic orderReadyToDeliverTopic() {
-        return TopicBuilder.name("orderReadyToDeliverTopic")
+    public NewTopic orderReadyTopic() {
+        return TopicBuilder.name("orderReadyTopic")
                 .build();
     }
 
