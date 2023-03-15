@@ -33,9 +33,7 @@ public class OrderController {
             containerFactory = "paymentSettledListenerFactory"
     )
     public void paymentSettledTopicHandler(PaymentSettledEvent paymentSettledEvent) {
-        JSONObject obj = new JSONObject(paymentSettledEvent.getOrderId());
-        String orderId = obj.getString("orderId");
-        orderService.paymentSettledTopicHandler(orderId);
+        orderService.paymentSettledTopicHandler(paymentSettledEvent.getOrderId());
     }
 
     @KafkaListener(

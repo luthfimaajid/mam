@@ -28,12 +28,11 @@ public class PaymentController {
 
     @KafkaListener(
             topics = "orderPlacedTopic",
-            groupId = "paymentId"
+            groupId = "paymentId",
+            containerFactory = "orderPlacedListenerFactory"
     )
     public void createPayment(OrderPlacedEvent orderPlacedEvent) {
-        JSONObject obj = new JSONObject(orderPlacedEvent.getOrderId());
-        String orderId = obj.getString("orderId");
-        paymentService.createPayment(orderId);
+        paymentService.createPayment(orderPlacedEvent.getOrderId());
     }
 
     @GetMapping("/{id}")
