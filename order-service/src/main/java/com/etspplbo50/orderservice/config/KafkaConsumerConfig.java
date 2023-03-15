@@ -40,7 +40,7 @@ public class KafkaConsumerConfig {
     }
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, PaymentSettledEvent>>
-    paymentSettledListenerFactory(
+    paymentSettledEventListenerFactory(
             ConsumerFactory<String, PaymentSettledEvent> paymentSettledEventConsumerFactory
     ) {
         ConcurrentKafkaListenerContainerFactory<String, PaymentSettledEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -50,11 +50,11 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, OrderReadyEvent> orderReadyEventConsumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfig());
+        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(), new JsonDeserializer<>(OrderReadyEvent.class, false));
     }
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderReadyEvent>>
-    orderReadyListenerFactory(
+    orderReadyEventListenerFactory(
             ConsumerFactory<String, OrderReadyEvent> orderReadyEventConsumerFactory
     ) {
         ConcurrentKafkaListenerContainerFactory<String, OrderReadyEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();

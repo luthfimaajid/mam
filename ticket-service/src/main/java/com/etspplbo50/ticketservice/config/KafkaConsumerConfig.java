@@ -26,16 +26,17 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         return props;
     }
 
     @Bean
     public ConsumerFactory<String, PaymentSettledEvent> paymentSettledEventConsumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfig());
+        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(), new JsonDeserializer<>(PaymentSettledEvent.class, false));
     }
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, PaymentSettledEvent>>
-    orderPlacedListenerFactory(
+    paymentSettledEventListenerFactory(
             ConsumerFactory<String, PaymentSettledEvent> paymentSettledEventConsumerFactory
     ) {
         ConcurrentKafkaListenerContainerFactory<String, PaymentSettledEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();

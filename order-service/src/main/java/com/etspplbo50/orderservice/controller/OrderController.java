@@ -30,7 +30,7 @@ public class OrderController {
     @KafkaListener(
             topics = "paymentSettledTopic",
             groupId = "orderId",
-            containerFactory = "paymentSettledListenerFactory"
+            containerFactory = "paymentSettledEventListenerFactory"
     )
     public void paymentSettledTopicHandler(PaymentSettledEvent paymentSettledEvent) {
         orderService.paymentSettledTopicHandler(paymentSettledEvent.getOrderId());
@@ -39,12 +39,11 @@ public class OrderController {
     @KafkaListener(
             topics = "orderReadyTopic",
             groupId = "orderId",
-            containerFactory = "orderReadyListenerFactory"
+            containerFactory = "orderReadyEventListenerFactory"
     )
-    public void orderReadyToDeliverTopicHandler(OrderReadyEvent orderReadyToDeliverEvent) {
-        JSONObject obj = new JSONObject(orderReadyToDeliverEvent.getOrderId());
-        String orderId = obj.getString("orderId");
-        orderService.orderReadyToDeliverTopicHandler(orderId);
+    public void orderReadyToDeliverTopicHandler(OrderReadyEvent orderReadyEvent) {
+        log.info(orderReadyEvent.toString());
+        orderService.orderReadyToDeliverTopicHandler(orderReadyEvent.getOrderId());
     }
 
 //    @KafkaListener(

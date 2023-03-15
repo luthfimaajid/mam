@@ -75,7 +75,7 @@ public class TicketService {
 
             ticketRepository.save(newTicket);
 
-            orderReadyEventKafkaTemplate.send("orderReadyTopic", new OrderReadyEvent(newTicket.getOrderId()));
+            orderReadyEventKafkaTemplate.send("orderReadyTopic", new OrderReadyEvent(newTicket.getOrderId(), newTicket.getStartTime(), newTicket.getEndTime()));
 
             return mapTicketToKitchenResponse(newTicket);
         } else {

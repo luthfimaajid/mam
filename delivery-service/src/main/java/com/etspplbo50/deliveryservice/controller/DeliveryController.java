@@ -20,23 +20,14 @@ import java.util.List;
 public class DeliveryController {
     private final DeliveryService deliveryService;
 
-//    @KafkaListener(
-//            topics = "paymentSettledTopic",
-//            groupId = "deliveryId"
-//    )
-//    public void paymentSettledTopicHandler(PaymentSettledEvent paymentSettledEvent) {
-//        JSONObject obj = new JSONObject(paymentSettledEvent.getOrderId());
-//        String orderId = obj.getString("orderId");
-//        deliveryService.paymentSettledTopicHandler(orderId);
-//    }
     @KafkaListener(
             topics = "orderReadyTopic",
-            groupId = "deliveryId"
+            groupId = "deliveryId",
+            containerFactory = "orderReadyEventListenerFactory"
     )
     public void orderReadyTopicHandler(OrderReadyEvent orderReadyEvent) {
-        JSONObject obj = new JSONObject(orderReadyEvent.getOrderId());
-        String orderId = obj.getString("orderId");
-        deliveryService.orderReadyTopicHandler(orderId);
+        log.info(orderReadyEvent.toString());
+        deliveryService.orderReadyTopicHandler(orderReadyEvent.getOrderId());
     }
 
     @GetMapping("/{id}")

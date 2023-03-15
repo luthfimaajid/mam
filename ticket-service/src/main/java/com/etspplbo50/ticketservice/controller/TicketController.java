@@ -22,12 +22,11 @@ public class TicketController {
 
     @KafkaListener(
             topics = "paymentSettledTopic",
-            groupId = "ticketId"
+            groupId = "ticketId",
+            containerFactory = "paymentSettledEventListenerFactory"
     )
     public void paymentSettledTopicHandler(PaymentSettledEvent paymentSettledEvent) {
-        JSONObject obj = new JSONObject(paymentSettledEvent.getOrderId());
-        String orderId = obj.getString("orderId");
-        ticketService.paymentSettledTopicHandler(orderId);
+        ticketService.paymentSettledTopicHandler(paymentSettledEvent.getOrderId());
     }
 
     @GetMapping("/{id}")
