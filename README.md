@@ -5,3 +5,5 @@
 |-------|---------------|
 | NIM   | 201524050     |
 | KELAS | 3B            |
+
+![diagram arsitektur microservices](./diagram.png)

@@ -5,6 +5,7 @@ import com.etspplbo50.inventoryservice.dto.InventoryResponse;
 import com.etspplbo50.inventoryservice.model.Inventory;
 import com.etspplbo50.inventoryservice.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,8 +15,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class InventoryService {
+@Slf4j
+public class InventoryService{
     private final InventoryRepository inventoryRepository;
+
+
 
     public InventoryResponse createInventory(InventoryRequest inventoryRequest) {
         Inventory inventory = Inventory.builder()
@@ -78,6 +82,15 @@ public class InventoryService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found");
         }
     }
+
+    public Boolean checkStock(String cafeId, List<String> menuId) {
+        List<Inventory> inventoryList = inventoryRepository.findAllByCafeIdAndMenuIdIn(cafeId, menuId);
+
+        return inventoryList.stream()
+                .allMatch(inventory -> inventory.getIsAvailable().equals(Boolean.TRUE));
+    }
+
+
 
     private InventoryResponse mapModelToResponse(Inventory inventory) {
         return InventoryResponse.builder()

@@ -7,25 +7,22 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.sql.Date;
+import java.time.Instant;
 
 @Document(value = "ticket")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class Ticket {
+public class Ticket{
     @Id
     private String id;
     private String orderId;
     private String status;
     @CreatedDate
-    private Date startTime;
+    private Instant startTime;
     @LastModifiedDate
-    private Date endTime;
-    @Version
-    private Integer version;
+    private Instant endTime;
 }

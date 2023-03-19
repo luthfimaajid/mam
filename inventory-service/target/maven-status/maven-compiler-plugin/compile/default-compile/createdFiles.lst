@@ -1,0 +1,12 @@
+com\etspplbo50\inventoryservice\dto\InventoryResponse.class
+com\etspplbo50\inventoryservice\InventoryServiceApplication.class
+com\etspplbo50\inventoryservice\config\GrpcConfig.class
+com\etspplbo50\inventoryservice\model\Inventory.class
+com\etspplbo50\inventoryservice\dto\InventoryResponse$InventoryResponseBuilder.class
+com\etspplbo50\inventoryservice\repository\InventoryRepository.class
+com\etspplbo50\inventoryservice\service\InventoryService.class
+com\etspplbo50\inventoryservice\controller\InventoryController.class
+com\etspplbo50\inventoryservice\dto\InventoryRequest.class
+com\etspplbo50\inventoryservice\model\Inventory$InventoryBuilder.class
+com\etspplbo50\inventoryservice\dto\InventoryRequest$InventoryRequestBuilder.class
+com\etspplbo50\inventoryservice\service\InventoryServiceGrpc.class

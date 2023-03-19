@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -26,15 +27,19 @@ public class DeliveryService {
     private final KafkaTemplate<String, OrderDeliveredEvent> orderDeliveredEventKafkaTemplate;
 
     public void orderReadyTopicHandler(String orderId) {
+        Random rand = new Random();
+        Integer distance = rand.nextInt(20) + 1;
+
         Delivery delivery = Delivery.builder()
                 .orderId(orderId)
                 .status("SHIPPED")
+                .distance(distance)
                 .employeeId("640f4a33d17f4d5cb232fb2b")
                 .build();
 
         deliveryRepository.save(delivery);
 
-        orderShippedEventKafkaTemplate.send("orderShippedTopic", new OrderShippedEvent(orderId, delivery.getEmployeeId()));
+        orderShippedEventKafkaTemplate.send("orderShippedTopic", new OrderShippedEvent(orderId, delivery.getEmployeeId(), delivery.getDistance()));
 
         log.info("Delivering order for {}", orderId);
     }
@@ -85,6 +90,7 @@ public class DeliveryService {
                     OrderDeliveredEvent.builder()
                             .orderId(newDelivery.getOrderId())
                             .employeeId(newDelivery.getEmployeeId())
+                            .distance(newDelivery.getDistance())
                             .startTime(newDelivery.getStartTime())
                             .endTime(newDelivery.getEndTime())
                     .build()
@@ -111,7 +117,11 @@ public class DeliveryService {
         return DeliveryResponse.builder()
                 .id(delivery.getId())
                 .orderId(delivery.getOrderId())
+                .employeeId(delivery.getEmployeeId())
+                .distance(delivery.getDistance())
                 .status(delivery.getStatus())
+                .startTime(delivery.getStartTime())
+                .endTime(delivery.getEndTime())
                 .build();
     }
 }

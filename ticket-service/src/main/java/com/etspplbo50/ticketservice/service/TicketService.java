@@ -99,6 +99,8 @@ public class TicketService {
                 .id(ticket.getId())
                 .orderId(ticket.getOrderId())
                 .status(ticket.getStatus())
+                .startTime(ticket.getStartTime())
+                .endTime(ticket.getEndTime())
                 .build();
     }
 }

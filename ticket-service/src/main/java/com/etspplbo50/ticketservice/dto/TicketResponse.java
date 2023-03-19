@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +15,6 @@ public class TicketResponse {
     private String id;
     private String orderId;
     private String status;
-    private Timestamp startTime;
-    private Timestamp endTime;
+    private Instant startTime;
+    private Instant endTime;
 }

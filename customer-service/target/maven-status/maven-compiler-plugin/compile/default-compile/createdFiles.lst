@@ -1,0 +1,10 @@
+com\etspplbo50\customerservice\repository\CustomerRepository.class
+com\etspplbo50\customerservice\dto\CustomerResponse.class
+com\etspplbo50\customerservice\service\CustomerService.class
+com\etspplbo50\customerservice\controller\CustomerController.class
+com\etspplbo50\customerservice\dto\CustomerRequest.class
+com\etspplbo50\customerservice\CustomerServiceApplication.class
+com\etspplbo50\customerservice\dto\CustomerRequest$CustomerRequestBuilder.class
+com\etspplbo50\customerservice\model\Customer.class
+com\etspplbo50\customerservice\dto\CustomerResponse$CustomerResponseBuilder.class
+com\etspplbo50\customerservice\model\Customer$CustomerBuilder.class

@@ -11,6 +11,7 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Date;
+import java.time.Instant;
 
 @Document(value = "delivery")
 @AllArgsConstructor
@@ -23,10 +24,9 @@ public class Delivery {
     private String orderId;
     private String employeeId;
     private String status;
+    private Integer distance;
     @CreatedDate
-    private Date startTime;
+    private Instant startTime;
     @LastModifiedDate
-    private Date endTime;
-    @Version
-    private Integer version;
+    private Instant endTime;
 }

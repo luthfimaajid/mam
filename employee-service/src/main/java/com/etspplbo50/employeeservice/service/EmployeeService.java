@@ -73,6 +73,10 @@ public class EmployeeService {
         }
     }
 
+//    public getAvailableEmployee(String cafeId) {
+//
+//    }
+
     private EmployeeResponse mapModelToResponse(Employee employee) {
         return EmployeeResponse.builder()
                 .id(employee.getId())

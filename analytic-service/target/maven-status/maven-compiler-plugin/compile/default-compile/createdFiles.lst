@@ -1,0 +1,15 @@
+com\etspplbo50\analyticservice\event\OrderDeliveredEvent$OrderDeliveredEventBuilder.class
+com\etspplbo50\analyticservice\dto\AnalyticRequest.class
+com\etspplbo50\analyticservice\config\KafkaTopicConfig.class
+com\etspplbo50\analyticservice\model\Analytic$AnalyticBuilder.class
+com\etspplbo50\analyticservice\event\OrderDeliveredEvent.class
+com\etspplbo50\analyticservice\config\KafkaConsumerConfig.class
+com\etspplbo50\analyticservice\dto\AnalyticRequest$AnalyticRequestBuilder.class
+com\etspplbo50\analyticservice\AnalyticServiceApplication.class
+com\etspplbo50\analyticservice\dto\AnalyticResponse$AnalyticResponseBuilder.class
+com\etspplbo50\analyticservice\model\Analytic.class
+com\etspplbo50\analyticservice\service\AnalyticService.class
+com\etspplbo50\analyticservice\dto\AnalyticResponse.class
+com\etspplbo50\analyticservice\repository\AnalyticRepository.class
+com\etspplbo50\analyticservice\controller\AnalyticController.class
+com\etspplbo50\analyticservice\event\OrderReadyEvent.class

@@ -8,10 +8,17 @@ import com.etspplbo50.orderservice.event.OrderPlacedEvent;
 import com.etspplbo50.orderservice.model.Order;
 import com.etspplbo50.orderservice.model.OrderLineItems;
 import com.etspplbo50.orderservice.repository.OrderRepository;
+import com.netflix.appinfo.InstanceInfo;
+import com.netflix.discovery.EurekaClient;
+import io.grpc.Channel;
+import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.ServiceInstance;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
+import com.etspplbo50.inventoryservicegrpc.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -21,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +36,12 @@ import java.util.Optional;
 @Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
-
+    private final EurekaClient eurekaClient;
+    @GrpcClient("inventory")
+    private InventoryServiceGrpc.InventoryServiceBlockingStub inventoryServiceBlockingStub;
     private final WebClient.Builder webClient;
-
     private final KafkaTemplate<String, OrderPlacedEvent> orderPlacedKafkaTemplate;
+
 
     public String placeOrder(OrderRequest orderRequest) {
         List<OrderLineItems> orderLineItemsList = orderRequest.getOrderLineItemsList()
@@ -52,56 +62,34 @@ public class OrderService {
                 .orderLineItemsList(orderLineItemsList)
                 .build();
 
-
-//        List<String> menuId = order.getOrderLineItemsList()
-//                .stream()
-//                .map(orderLineItems -> orderLineItems.getMenuId())
-//                .toList();
-
-        // call inventory service and place order if product is instock
-//        log.info("sending request to inventory");
-//        InventoryResponse[] inventoryResponses = webClient.build().get()
-//                .uri("http://inventory-service/api/inventory",
-//                        uriBuilder -> uriBuilder
-//                                .queryParam("skuCode", skuCodes)
-//                                .queryParam("cafeId", )
-//                                .build())
-//                .retrieve()
-//                .bodyToMono(InventoryResponse[].class)
-//                .block();
+//        InstanceInfo inventoryInstance = eurekaClient.getNextServerFromEureka("inventory-service", false);
+//        final ManagedChannel channel = ManagedChannelBuilder.forAddress(inventoryInstance.getHostName(), Integer.parseInt(inventoryInstance.getMetadata().get("gRPC_port")))
+//                .usePlaintext()
+//                .build();
 //
-//        boolean allProductInStock = Arrays.stream(inventoryResponses).
-//                allMatch(inventoryResponse -> inventoryResponse.isInStock());
-//
-//        if (allProductInStock) {
+//        InventoryServiceGrpc.InventoryServiceBlockingStub stub = InventoryServiceGrpc.newBlockingStub(channel);
 
+        List<String> menuIdList = order.getOrderLineItemsList()
+                .stream()
+                .map(orderLineItems -> orderLineItems.getMenuId())
+                .toList();
+
+        CheckStockRequest checkStockRequest = CheckStockRequest.newBuilder()
+                .setCafeId(order.getCafeId())
+                .addAllMenuId(menuIdList)
+                .build();
+
+        CheckStockResponse checkStockResponse = inventoryServiceBlockingStub.checkStock(checkStockRequest);
+
+//       channel.shutdownNow();
+
+        if (checkStockResponse.getIsAvailable()) {
             Order createdOrder = orderRepository.save(order);
-
-//            createPayment(createdOrder.getOrderNumber(), orderLineItemsList);
-//
-//            List<OrderLineItemsUpdate> orderLineItemsUpdates = orderLineItemsList.stream().map(orderLineItems -> {
-//                return OrderLineItemsUpdate.builder()
-//                        .quantity(orderLineItems.getQuantity())
-//                        .skuCode(orderLineItems.getSkuCode())
-//                        .build();
-//            }).toList();
-
-//            log.info("sending 2nd request to inventory");
-//            webClient.build().patch()
-//                    .uri("http://inventory-service/api/inventory/update-stock")
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .body(BodyInserters.fromValue(orderLineItemsUpdates))
-//                    .retrieve()
-//                    .bodyToMono(void.class)
-//                    .block();
-
-            orderPlacedKafkaTemplate.send("orderPlacedTopic", new OrderPlacedEvent(order.getId()));
-
+            orderPlacedKafkaTemplate.send("orderPlacedTopic", new OrderPlacedEvent(createdOrder.getId()));
             return "Order placed successfully please pay the order";
-
-//        } else {
-//            throw new IllegalArgumentException("Product is not in stock");
-//        }
+        } else {
+            return "Product is not in stock";
+        }
     }
 
     public List<OrderResponse> getAllOrder() {
@@ -142,7 +130,7 @@ public class OrderService {
 
             newOrder.setStatus("WAITING FOR DELIVERY");
 
-            log.info("Waiting for employee to deliver order");
+            log.info("Waiting for available employee to deliver order");
             orderRepository.save(newOrder);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found");
@@ -200,4 +188,5 @@ public class OrderService {
                 .orderLineItemsList(order.getOrderLineItemsList())
                 .build();
     }
+
 }

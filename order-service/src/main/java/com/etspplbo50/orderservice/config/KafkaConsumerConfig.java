@@ -2,6 +2,7 @@ package com.etspplbo50.orderservice.config;
 
 import com.etspplbo50.orderservice.event.OrderDeliveredEvent;
 import com.etspplbo50.orderservice.event.OrderReadyEvent;
+import com.etspplbo50.orderservice.event.OrderShippedEvent;
 import com.etspplbo50.orderservice.event.PaymentSettledEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -13,9 +14,7 @@ import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
-import org.springframework.kafka.support.converter.StringJsonMessageConverter;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,22 +60,34 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(orderReadyEventConsumerFactory);
         return factory;
     }
-//    @Bean
-//    public StringJsonMessageConverter jsonMessageConverter() {
-//        return new StringJsonMessageConverter();
-//    }
-//
-//    @Bean
-//    public ConsumerFactory<String, String> orderDeliveredEventConsumerFactory() {
-//        return new DefaultKafkaConsumerFactory<>(consumerOrderDeliveredConfig());
-//    }
-//    @Bean
-//    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
-//    orderDeliveredListenerFactory(
-//            ConsumerFactory<String, String> orderDeliveredEventConsumerFactory
-//    ) {
-//        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-//        factory.setConsumerFactory(orderDeliveredEventConsumerFactory);
-//        return factory;
-//    }
+
+    @Bean
+    public ConsumerFactory<String, OrderShippedEvent> orderShippedEventConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(), new JsonDeserializer<>(OrderShippedEvent.class, false));
+    }
+
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderShippedEvent>>
+    orderShippedEventListenerFactory(
+            ConsumerFactory<String, OrderShippedEvent> orderShippedEventConsumerFactory
+    ) {
+        ConcurrentKafkaListenerContainerFactory<String, OrderShippedEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(orderShippedEventConsumerFactory);
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, OrderDeliveredEvent> orderDeliveredEventConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(), new JsonDeserializer<>(OrderDeliveredEvent.class, false));
+    }
+
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderDeliveredEvent>>
+    orderDeliveredEventListenerFactory(
+            ConsumerFactory<String, OrderDeliveredEvent> orderDeliveredEventConsumerFactory
+    ) {
+        ConcurrentKafkaListenerContainerFactory<String, OrderDeliveredEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(orderDeliveredEventConsumerFactory);
+        return factory;
+    }
 }

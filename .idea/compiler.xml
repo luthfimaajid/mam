@@ -8,25 +8,28 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="delivery-service" />
+        <module name="customer-service" />
+        <module name="menu-service" />
+        <module name="employee-service" />
+        <module name="ticket-service" />
+        <module name="analytic-service" />
         <module name="discovery-server" />
         <module name="cafe-service" />
         <module name="inventory-service" />
         <module name="payment-service" />
-        <module name="customer-service" />
+        <module name="proto-common" />
         <module name="api-gateway" />
         <module name="order-service" />
-        <module name="menu-service" />
-        <module name="employee-service" />
-        <module name="ticket-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="analytic-service" target="1.5" />
+      <module name="etspplbo50" target="17" />
       <module name="gerai-service" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="analytic-service" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
       <module name="cafe-service" options="-parameters" />
       <module name="customer-service" options="-parameters" />
@@ -37,6 +40,7 @@
       <module name="menu-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="payment-service" options="-parameters" />
+      <module name="proto-common" options="" />
       <module name="ticket-service" options="-parameters" />
     </option>
   </component>

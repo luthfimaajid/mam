@@ -1,0 +1,10 @@
+com\etspplbo50\menuservice\model\Menu.class
+com\etspplbo50\menuservice\repository\MenuRepository.class
+com\etspplbo50\menuservice\service\MenuService.class
+com\etspplbo50\menuservice\dto\MenuResponse$MenuResponseBuilder.class
+com\etspplbo50\menuservice\dto\MenuResponse.class
+com\etspplbo50\menuservice\MenuServiceApplication.class
+com\etspplbo50\menuservice\model\Menu$MenuBuilder.class
+com\etspplbo50\menuservice\dto\MenuRequest.class
+com\etspplbo50\menuservice\controller\MenuController.class
+com\etspplbo50\menuservice\dto\MenuRequest$MenuRequestBuilder.class

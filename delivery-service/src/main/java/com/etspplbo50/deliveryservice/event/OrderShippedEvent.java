@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class OrderShippedEvent {
     private String orderId;
     private String employeeId;
+    private Integer distance;
 }

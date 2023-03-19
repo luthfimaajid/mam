@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.Instant;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +17,7 @@ public class DeliveryResponse {
     private String orderId;
     private String employeeId;
     private String status;
-    private Date startTime;
-    private Date endTime;
-    private Integer version;
+    private Integer distance;
+    private Instant startTime;
+    private Instant endTime;
 }
